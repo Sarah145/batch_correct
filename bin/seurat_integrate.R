@@ -55,7 +55,7 @@ make_option(
     make_option(
         c("-a", "--assay_name"),
         action = "store",
-        default = "logcounts",
+        default = "RNA",
         type = 'character',
         help = 'Counts assay to add to the h5ad object'
     ),
@@ -82,12 +82,11 @@ make_option(
     )
 )
 
-print("I")
 opt <- parse_args(OptionParser(option_list=option_list, add_help_option=FALSE))
 
 suppressPackageStartupMessages(require(Seurat))
 # args
-assay_name <- 'RNA'
+assay_name <- opt$assay_name
 corrected_assay <- opt$corrected_assay 
 batch_key <- opt$batch_key
 hvg_method <- opt$hvg_method
