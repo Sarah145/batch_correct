@@ -4,6 +4,7 @@ RUN apt-get update --fix-missing && apt-get install -y procps wget bzip2 ca-cert
 
 
 RUN mkdir -p /root/.conda
+RUN chmod -R o+rX /opt/conda/lib/python3.7/site-packages/*
 
 ENV MINICONDA_VERSION=4.7.10
 ENV PATH /opt/conda/bin:$PATH
