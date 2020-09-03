@@ -4,7 +4,6 @@ RUN apt-get update --fix-missing && apt-get install -y procps wget bzip2 ca-cert
 
 
 RUN mkdir -p /root/.conda
-RUN chmod -R o+rX /opt/conda/lib/python3.7/site-packages/*
 
 ENV MINICONDA_VERSION=4.7.10
 ENV PATH /opt/conda/bin:$PATH
@@ -29,3 +28,6 @@ RUN Rscript -e 'BiocManager::install(c("limma", "SummarizedExperiment", "SingleC
 
 # install github packages
 RUN Rscript -e 'devtools::install_github(c("immunogenomics/harmony", "LTLA/scuttle", "MarioniLab/DropletUtils", "cellgeni/sceasy", "mojaveazure/loomR"))'
+
+RUN chmod -R o+rX /opt/conda/lib/python3.7/site-packages/*
+
