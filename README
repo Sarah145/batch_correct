@@ -1,3 +1,5 @@
+
+
 ## Batch correction pipeline
 
 This repository contains scripts to run a Nextflow pipeline to compare different batch correction methods for single-cell RNA-seq data. This is mostly just a clone of the [BatchBench](https://github.com/cellgeni/batchbench) pipeline from the CellGen IT team at Sanger but I couldn't get that to run so made some edits and added one or two extra things. 
