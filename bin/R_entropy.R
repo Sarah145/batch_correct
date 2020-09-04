@@ -74,6 +74,7 @@ option_list = list(
 opt <- parse_args(OptionParser(option_list=option_list))
 
 suppressPackageStartupMessages(require(scran))
+suppressPackageStartupMessages(require(Seurat))
 
 # args
 assay_name <- opt$assay_name
@@ -120,7 +121,8 @@ if (class(object) == "SingleCellExperiment"){
   # COMPUTE ENTROPY 
   # 1.1) tools that correct low_D embeddings
   if (corrected_emb %in% reducedDimNames(object)){
-    corrected_space <- as.matrix(object@reducedDims@listData[[corrected_emb]])
+    seu_ob <- as.Seurat(object, counts = assay_name, data = assay_name, assay = assay_name)
+    corrected_space <- as.matrix(Embeddings(seu_ob[[corrected_emb]]))
     col_names <- c("PCA_batch_entropy", "PCA_cell_type_entropy")
     save_results(compute_entropy(corrected_space, k_num = k_num, dim_num = dim_num, bool = TRUE, x, batch_vector, N_batches, cell_type_vector, N_cell_types), col_names) 
     print("Entropy calculated in PCA space!")
@@ -149,6 +151,6 @@ if (class(object) == "Seurat"){
   
   space <- as.matrix(object@assays[[corrected_assay]]@data)
   col_names <- c("Batch_entropy", "Cell_type_entropy")
-  save_results(compute_entropy(corrected_space = space, bool = FALSE, x, batch_vector, N_batches, cell_type_vector, N_cell_types), col_names) 
+  save_results(compute_entropy(space, k_num = k_num, dim_num = dim_num, bool = FALSE, x, batch_vector, N_batches, cell_type_vector, N_cell_types), col_names)
   print("Entropy calculated over Seurat object!")
 }

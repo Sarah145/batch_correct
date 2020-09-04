@@ -51,6 +51,8 @@ opt <- parse_args(OptionParser(option_list=option_list))
 
 suppressPackageStartupMessages(require(scater))
 suppressPackageStartupMessages(require(harmony))
+suppressPackageStartupMessages(require(Seurat))
+
 
 # args
 assay_name <- opt$assay_name
@@ -62,13 +64,19 @@ corrected_emb <- opt$corrected_emb
 dataset <- readRDS(opt$input_object)
 # run PCA
 dataset <- runPCA(dataset, exprs_values = assay_name, ncomponents = n_pcs)
-pca <- dataset@reducedDims@listData[["PCA"]]
+seu_dataset <- as.Seurat(dataset, counts = assay_name, data = assay_name, assay = assay_name)
+
+pca <- as.matrix(Embeddings(seu_dataset[['PCA']]))
+
 # cell batch label vector
 batch_vector <- as.character(dataset[[batch_key]])
 # run Harmony
-dataset@reducedDims@listData[[corrected_emb]] <- HarmonyMatrix(pca, batch_vector, theta=4, do_pca = F)
-# Add rownames to corrected embedding 
-rownames(dataset@reducedDims@listData[[corrected_emb]]) <- colnames(dataset)
+harmony_embs <- HarmonyMatrix(pca, batch_vector, theta=4, do_pca = F)
+seu_dataset[[corrected_emb]] <- CreateDimReducObject(embeddings = harmony_embs, key = "corrected_", assay = DefaultAssay(seu_dataset))
+dataset <- as.SingleCellExperiment(seu_dataset, assay = assay_name)
+assayNames(dataset) <- c(assay_name, paste0(assay_name, '1'))
+reducedDimNames(dataset) <- c('X_pca', 'X_umap', 'PCA', corrected_emb)
+
 # save object with corrected embedding
 saveRDS(dataset, opt$output_object)
 print("Harmony worked!")
