@@ -1,16 +1,14 @@
-
-
 ## Batch correction pipeline
 
-This repository contains scripts to run a Nextflow pipeline to compare different batch correction methods for single-cell RNA-seq data. This is mostly just a clone of the [BatchBench](https://github.com/cellgeni/batchbench) pipeline from the CellGen IT team at Sanger but I couldn't get that to run so made some edits and added one or two extra things. 
+This repository contains scripts to run a Nextflow pipeline to compare different batch correction methods for single-cell RNA-seq data. This is mostly just a clone of the [BatchBench](https://github.com/cellgeni/batchbench) pipeline from the CellGen IT team at Sanger but I couldn't get that to run so made some edits and added one or two extra things.
 
 The input files for this pipeline must be .Rds files of the uncorrected data as a SingleCellExperiment object (all batches in one object) with batch labels stored in the `batch_key` ('Batch' by default) column and cell type labels stored in the `celltype_key` ('cell_type1' by default) column.
 
 
 
-The pipeline will run 7 different batch correction methods on the data: 
+The pipeline will run 7 different batch correction methods on the data:
 
-- Scanorama 
+- Scanorama
 - BBKNN
 - Seurat 3
 - Combat
@@ -37,4 +35,3 @@ To run pipeline:
 - Edit `dataset_list.txt` file with name of files - one file on each line, no file extension.
 - Run pipeline with `nextflow run main.nf -profile singularity -with-trace -with-dag`.
 - Compile html report of run by running `./compile_report.R <sample_name>`.
-
