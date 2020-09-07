@@ -90,7 +90,7 @@ assay_name <- opt$assay_name
 corrected_assay <- opt$corrected_assay 
 batch_key <- opt$batch_key
 hvg_method <- opt$hvg_method
-n_features <- opt$n_features
+#n_features <- opt$n_features
 n_anchors <- opt$n_anchors
 
 # input dataset
@@ -110,7 +110,7 @@ for (i in 1:N_batches) {
    #                                verbose = FALSE)
   batch_list[[i]] <- FindVariableFeatures(object = batch_list[[i]], 
                                           selection.method = 'dispersion', 
-                                          nfeatures = 10000, 
+                                          nfeatures = n_features, 
                                           verbose = F)
 }
 
@@ -119,7 +119,7 @@ if(any(sapply(batch_list, ncol)) < 200) {
   k_filter <- (min(sapply(batch_list, ncol)))
 }else{k_filter =200}
 # Find integration anchors
-anchors <- FindIntegrationAnchors(object.list = batch_list, dims = 1:n_anchors, k.filter = k_filter, anchor.features = 10000)
+anchors <- FindIntegrationAnchors(object.list = batch_list, dims = 1:n_anchors, k.filter = k_filter, anchor.features = n_features)
 # Integrate subsets
 integrated <- IntegrateData(new.assay.name = corrected_assay, anchorset = anchors, dims = 1:n_anchors)
 # save seurat3 corrected object

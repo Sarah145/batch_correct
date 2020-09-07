@@ -33,5 +33,10 @@ To run pipeline:
 - Pull Singularity image - `singularity pull shub://Sarah145/batch_correct`.
 - Edit the `nextflow.config` script with location of data, batch key, cell type key, etc. *Note: profile section of the nextflow.config script in this repo is configured to run on cluster with slurm.*
 - Edit `dataset_list.txt` file with name of files - one file on each line, no file extension.
-- Run pipeline with `nextflow run main.nf -profile singularity -with-trace -with-dag`.
+- Run pipeline with `nextflow run main.nf -profile singularity -with-trace trace.txt -with-dag flowchart.png`.
 - Compile html report of run by running `./compile_report.R <sample_name>`.
+
+**Overview of pipeline**
+
+<img src="https://github.com/Sarah145/batch_correct/blob/master/imgs/flowchart.png?raw=true">
+

@@ -1,7 +1,6 @@
 FROM r-base:4.0.0
 #
-RUN apt-get update --fix-missing && apt-get install -y procps wget bzip2 ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 git mercurial subversion build-essential libcurl4-gnutls-dev libssl-dev libxml2-dev libhdf5-dev
-
+RUN apt-get update --fix-missing && apt-get install -y procps wget bzip2 ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 git mercurial subversion build-essential libcurl4-gnutls-dev libssl-dev libxml2-dev libhdf5-dev graphviz
 
 RUN mkdir -p /root/.conda
 
@@ -20,7 +19,7 @@ RUN conda install python=${PYTHON_VERSION}
 RUN pip install scipy scanpy bbknn scanorama
 
 # Install other CRAN
-RUN Rscript -e 'install.packages(c("Seurat", "rJava", "umap","ggplot2", "ggfortify", "Rmagic", "BiocManager", "devtools","lsa","uwot", "SC3", "optparse", "stringr"), dependencies = TRUE)'
+RUN Rscript -e 'install.packages(c("Seurat", "rJava", "umap","ggplot2", "ggfortify", "Rmagic", "BiocManager", "devtools","lsa","uwot", "SC3", "optparse", "stringr", "R2HTML"), dependencies = TRUE)'
 
 # Install Bioconductor packages
 RUN Rscript -e 'BiocManager::install(c("limma", "SummarizedExperiment", "SingleCellExperiment", "LoomExperiment", "Rhdf5lib", "scater", "scran", "RUVSeq", "sva", "MultiAssayExperiment", "batchelor"))'
