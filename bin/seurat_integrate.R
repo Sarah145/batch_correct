@@ -90,11 +90,13 @@ assay_name <- opt$assay_name
 corrected_assay <- opt$corrected_assay 
 batch_key <- opt$batch_key
 hvg_method <- opt$hvg_method
-#n_features <- opt$n_features
+n_features <- opt$n_features
 n_anchors <- opt$n_anchors
 
 # input dataset
 dataset <- readRDS(opt$input_object)
+n_features <- nrow(dataset)
+
 # convert to seurat object
 dataset <- as.Seurat(dataset, counts = assay_name, data = assay_name)
 batch_vector <- dataset[[batch_key]]
@@ -104,6 +106,7 @@ N_batches <- length(batch_names)
 
 # split seurat object into batches
 batch_list <- lapply(1:N_batches, function(x) {abc <- dataset[, dataset[[batch_key]] == batch_names[x]]})
+
 # Normalize and find HVG
 for (i in 1:N_batches) {
   #batch_list[[i]] <- NormalizeData(object = batch_list[[i]], 
@@ -118,6 +121,11 @@ for (i in 1:N_batches) {
 if(any(sapply(batch_list, ncol)) < 200) {
   k_filter <- (min(sapply(batch_list, ncol)))
 }else{k_filter =200}
+
+# free up memory before	integrating
+rm(dataset)
+gc()
+
 # Find integration anchors
 anchors <- FindIntegrationAnchors(object.list = batch_list, dims = 1:n_anchors, k.filter = k_filter, anchor.features = n_features)
 # Integrate subsets
@@ -125,25 +133,3 @@ integrated <- IntegrateData(new.assay.name = corrected_assay, anchorset = anchor
 # save seurat3 corrected object
 saveRDS(integrated, opt$output_object)
 
-
-
-
-# set during IntegrateData
-#DefaultAssay(integrated) <- "batch_corrected"
-
-# Run the standard workflow for visualization and clustering
-#integrated <- ScaleData(integrated, verbose = FALSE)
-#integrated <- RunPCA(integrated, npcs = 30, verbose = FALSE)
-#integrated <- RunUMAP(integrated, reduction = "pca", dims = 1:30)
-#DimPlot(integrated, reduction = "umap", group.by = "sample")
-#DimPlot(integrated, reduction = "umap", group.by = "cell_type1", label = TRUE, 
-#              repel = TRUE)
-#seu <- as.data.frame(Embeddings(integrated[['umap']]))
-#seu$sample <- integrated[['sample']]$sample
-#seu$cell_type <- integrated[['cell_type1']]$cell_type1
-#seu$sample <- factor(seu$sample, levels = c('3822d0', '3822TRT', '3822R'))
-#ggplot(seu, aes(x = UMAP_1, y = UMAP_2, col=sample)) +
-  #geom_polygon(data = hull, aes(col = NULL), alpha = 0, lty = 2, col='black', size=0.1, show.legend = F) +
-  #geom_point(size = 0.4, alpha = 0.7, show.legend = T) +
-  #scale_color_manual(values = paletteer_d('unikn::pal_signal')) +
-  #theme_void(base_size = 22) 
