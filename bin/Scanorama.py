@@ -39,7 +39,7 @@ def subset_by_batches(dataset):
 	# metadata
 	cell_metadata = dataset.obs
 	# subset dataset by batches
-	dataset_list = [dataset[dataset.obs[args.batch_key] == batch_names[i]] for i in range(0, N_batches)]
+	dataset_list = [dataset[dataset.obs[args.batch_key] == batch_names[i].copy()] for i in range(0, N_batches)]
     
 	correct_scanorama(dataset_list, cell_metadata)    
 
