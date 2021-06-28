@@ -60,7 +60,7 @@ mod0 = model.matrix(~ 1, data = mod_data)
 
 assay(dataset, corrected_assay) <- ComBat(
   dat = t(mod_data),
-  batch = as.character(dataset$sample),
+  batch = batch_vector,
   mod = mod0,
   par.prior = TRUE,
   prior.plots = FALSE
